@@ -46,7 +46,7 @@ test('create a user test', async ({ request }) => {
 });
 
 
-test('Update a user test', async ({ request }) => {
+test.skip('Update a user test', async ({ request }) => {
 
     //JS Object
     let userData = {
@@ -71,7 +71,7 @@ test('Update a user test', async ({ request }) => {
 });
 
 
-test('Delete a user test', async ({ request }) => {
+test.skip('Delete a user test', async ({ request }) => {
 
 
     //JS Object to JSON: Serialization

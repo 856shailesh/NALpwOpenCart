@@ -1,6 +1,3 @@
-
-
-import { ApiHelper } from '../../src/api/ApiHelper';
 import { test, expect } from '../../src/fixtures/apifixtures';
 
 const TOKEN = process.env.API_Token!;
