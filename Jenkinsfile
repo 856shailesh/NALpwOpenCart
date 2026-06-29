@@ -34,7 +34,6 @@ pipeline {
 
     environment {
         SLACK_CHANNEL = '#general'
-        REPORT_URL    = "${BUILD_URL}HTML_20Report/"
     }
 
     options {
@@ -129,16 +128,23 @@ pipeline {
             }
             post {
                 always {
+                    sh 'mkdir -p reports-dev/html reports-dev/allure'
+                    sh 'cp -r qa-tests/reports/html-report/* reports-dev/html/ || true'
+                    sh 'allure generate qa-tests/allure-results --clean -o reports-dev/allure || true'
                     publishHTML(target: [
-                        reportName: 'DEV Sanity HTML Report',
-                        reportDir: 'qa-tests/reports/html-report',
+                        reportName: 'DEV Sanity - PW HTML Report',
+                        reportDir: 'reports-dev/html',
                         reportFiles: 'index.html',
                         keepAll: true,
                         alwaysLinkToLastBuild: true
                     ])
-                    allure includeProperties: false,
-                        jdk: '',
-                        results: [[path: 'qa-tests/allure-results']]
+                    publishHTML(target: [
+                        reportName: 'DEV Sanity - Allure Report',
+                        reportDir: 'reports-dev/allure',
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true
+                    ])
                 }
             }
         }
@@ -188,16 +194,23 @@ pipeline {
             }
             post {
                 always {
+                    sh 'mkdir -p reports-qa/html reports-qa/allure'
+                    sh 'cp -r qa-tests/reports/html-report/* reports-qa/html/ || true'
+                    sh 'allure generate qa-tests/allure-results --clean -o reports-qa/allure || true'
                     publishHTML(target: [
-                        reportName: 'QA Regression HTML Report',
-                        reportDir: 'qa-tests/reports/html-report',
+                        reportName: 'QA Regression - PW HTML Report',
+                        reportDir: 'reports-qa/html',
                         reportFiles: 'index.html',
                         keepAll: true,
                         alwaysLinkToLastBuild: true
                     ])
-                    allure includeProperties: false,
-                        jdk: '',
-                        results: [[path: 'qa-tests/allure-results']]
+                    publishHTML(target: [
+                        reportName: 'QA Regression - Allure Report',
+                        reportDir: 'reports-qa/allure',
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true
+                    ])
                 }
             }
         }
@@ -247,16 +260,23 @@ pipeline {
             }
             post {
                 always {
+                    sh 'mkdir -p reports-stage/html reports-stage/allure'
+                    sh 'cp -r qa-tests/reports/html-report/* reports-stage/html/ || true'
+                    sh 'allure generate qa-tests/allure-results --clean -o reports-stage/allure || true'
                     publishHTML(target: [
-                        reportName: 'STAGE Sanity HTML Report',
-                        reportDir: 'qa-tests/reports/html-report',
+                        reportName: 'STAGE Sanity - PW HTML Report',
+                        reportDir: 'reports-stage/html',
                         reportFiles: 'index.html',
                         keepAll: true,
                         alwaysLinkToLastBuild: true
                     ])
-                    allure includeProperties: false,
-                        jdk: '',
-                        results: [[path: 'qa-tests/allure-results']]
+                    publishHTML(target: [
+                        reportName: 'STAGE Sanity - Allure Report',
+                        reportDir: 'reports-stage/allure',
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true
+                    ])
                 }
             }
         }
@@ -314,16 +334,23 @@ pipeline {
             }
             post {
                 always {
+                    sh 'mkdir -p reports-prod/html reports-prod/allure'
+                    sh 'cp -r qa-tests/reports/html-report/* reports-prod/html/ || true'
+                    sh 'allure generate qa-tests/allure-results --clean -o reports-prod/allure || true'
                     publishHTML(target: [
-                        reportName: 'PROD Smoke HTML Report',
-                        reportDir: 'qa-tests/reports/html-report',
+                        reportName: 'PROD Smoke - PW HTML Report',
+                        reportDir: 'reports-prod/html',
                         reportFiles: 'index.html',
                         keepAll: true,
                         alwaysLinkToLastBuild: true
                     ])
-                    allure includeProperties: false,
-                        jdk: '',
-                        results: [[path: 'qa-tests/allure-results']]
+                    publishHTML(target: [
+                        reportName: 'PROD Smoke - Allure Report',
+                        reportDir: 'reports-prod/allure',
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true
+                    ])
                 }
             }
         }
@@ -352,8 +379,7 @@ pipeline {
 *Build:* #${env.BUILD_NUMBER}
 *Duration:* ${currentBuild.durationString.replace(' and counting', '')}
 
-📊 <${env.BUILD_URL}HTML_20Report/|View HTML Report>
-📈 <${env.BUILD_URL}allure/|View Allure Report>
+📊 <${env.BUILD_URL}|View Reports in Jenkins>
 🔍 <${env.BUILD_URL}console|View Console Logs>
                     """
                 )
@@ -383,9 +409,9 @@ pipeline {
                                     </table>
                                 </div>
                                 <div style="background: #f8f9fa; padding: 20px 24px; border-top: 1px solid #eee;">
-                                    <h3 style="margin: 0 0 12px;">📊 Reports</h3>
-                                    <a href="${env.BUILD_URL}HTML_20Report/" style="display: inline-block; padding: 10px 20px; background: #1a1a2e; color: white; text-decoration: none; border-radius: 6px; margin: 4px;">📊 HTML Report</a>
-                                    <a href="${env.BUILD_URL}allure/" style="display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 6px; margin: 4px;">📈 Allure Report</a>
+                                    <h3 style="margin: 0 0 12px;">📊 Reports (8 reports per build)</h3>
+                                    <p style="color: #666; font-size: 13px; margin: 0 0 12px;">Click below to open Jenkins build page → Reports in sidebar</p>
+                                    <a href="${env.BUILD_URL}" style="display: inline-block; padding: 10px 20px; background: #1a1a2e; color: white; text-decoration: none; border-radius: 6px; margin: 4px;">📁 Open Jenkins Build</a>
                                     <a href="${env.BUILD_URL}console" style="display: inline-block; padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 6px; margin: 4px;">🔍 Console Logs</a>
                                 </div>
                                 <div style="text-align: center; padding: 16px; color: #999; font-size: 12px; border-top: 1px solid #eee;">
